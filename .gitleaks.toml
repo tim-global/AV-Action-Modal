@@ -57,15 +57,16 @@ description = "Markdown table with a password column (keep the password in 1Pass
 regex = '''(?im)^\|[^\n]*\b(?:password|passwd|passcode|pwd)s?\b[^\n]*\|[ \t]*\r?\n\|[ \t:|-]+\|[ \t]*\r?\n((?:\|[^\n]*\|[ \t]*(?:\r?\n|$))+)'''
 secretGroup = 1
 keywords = ["password", "passwd", "passcode", "pwd"]
+# Allowed only when EVERY row names a 1Password item (or op:// reference): one plaintext row flags the whole table.
 [[rules.allowlists]]
 regexTarget = "secret"
-regexes = ['''(?i)1password|op://''']
+regexes = ['''(?i)^(?:\|[^\n]*(?:1password|op://)[^\n]*\|[ \t]*(?:\r?\n|$))+$''']
 
 # "Password: xyz" / PASSWORD=xyz written in docs, notes, config and env files.
 [[rules]]
 id = "tim-password-in-text"
 description = "Password written in a doc or config file (keep it in 1Password and name the item instead)"
-regex = '''(?i)\b(?:password|passwd|passcode|pwd)\b(?:\*\*|__)?[^\S\r\n]*[:=][^\S\r\n]*(?:\*\*|__)?[^\S\r\n]*["'`]?([^\s"'`|<>{}()\[\],;]{6,64})'''
+regex = '''(?i)(?:\b|_)(?:password|passwd|passcode|pwd)\b(?:\*\*|__)?[^\S\r\n]*[:=][^\S\r\n]*(?:\*\*|__)?[^\S\r\n]*["'`]?([^\s"'`|<>{}()\[\],;]{6,64})'''
 secretGroup = 1
 entropy = 2.8
 keywords = ["password", "passwd", "passcode", "pwd"]
@@ -75,5 +76,6 @@ regexTarget = "secret"
 regexes = [
   '''(?i)^(changeme|change_me|password\d*|example\S*|placeholder|redacted|your[_-]?\w+|x{3,}|\*+|\.{3,}|null|none|nil|true|false|required|optional|string|hidden|secret|undefined|unknown|unset|empty|blank|same|see|n/a)$''',
   '''^[$%@]''',
+  '''(?i)^(choose|change|replace|enter|set[-_]|put[-_]|my[-_])''',
   '''(?i)1password|op://|process\.env|getenv|\{\{|env\(''',
 ]
